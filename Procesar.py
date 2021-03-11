@@ -3,11 +3,6 @@ class Analizar:
     def __init__(self, ruta):
        self.ruta=ruta
        self.Preservada="restaurante"
-       self.espera=False
-       self.reservada=False
-       self.cadena=False
-       self.opciones=False
-       self.error=False
        self.leerLinea()
 
     def leerLinea(self):
@@ -23,29 +18,54 @@ class Analizar:
         archivo.close() 
     
     def leerCaracteres(self, linea):
-        self.contColumna=0
 
-        if self.espera==False:
-            if linea.startswith("r"):
-                self.reservada=True
-            else:
-                self.reservada=False
+        if linea.startswith("r"):
+            cont=1
+            reservada=""
+            estado=0
+            string=""
+            if "=" in linea:
+                for caracter in linea:
+                    if estado==0:
+                        if caracter!="=":
+                            string+=caracter
+                        else:
+                            if string.rstrip()=="restaurante":
+                                reservada=string
+                                print("reservada",reservada,"Linea",self.contLinea,"Columna",cont)
+                                estado=1
+                            else:
+                                print("no se reconoce",string, "Linea",self.contLinea,"Columna",cont)
+                                estado=1
+                            string=""
 
-            if linea.startswith("'"):
-                self.cadena=True
-            else:
-                self.cadena=False
+                    if estado==1:
+                        if caracter!="'":
+                            string+=caracter
+                        else:
+                            estado==3
+                        print(string)
+                    cont+=1
 
-            if linea.startswith("["):
-                self.opciones=True
-            else:
-                self.opciones=False
-                
-            if self.reservada and self.cadena and self.opciones:
-                self.error=False
-            else:
-                self.error=False
-        
+        else:
+            self.reservada=False
+
+        '''
+        if linea.startswith("'"):
+            self.cadena=True
+        else:
+            self.cadena=False
+
+        if linea.startswith("["):
+            self.opciones=True
+        else:
+            self.opciones=False
+            
+        if self.reservada and self.cadena and self.opciones:
+            self.error=False
+        else:
+            self.error=False
+        '''
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
 
 a=Analizar("entrada.txt")
