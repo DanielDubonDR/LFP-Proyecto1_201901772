@@ -58,12 +58,12 @@ def menu():
     opcion=0
     while opcion!=6:
         print("\n----------------------------------MENÚ PRINCIPAL----------------------------------\n")
-        print("  ______________________________________________________________________________")
+        print("   _____________________________________________________________________________ ")
         print("  |                                                                             |")
         print("  |   - Curso: Lenguajes Formales y de Programación       ~ Sección: B+         |")
         print("  |   - Nombre: Daniel Reginaldo Dubón Rodríguez          ~ Carné: 201901772    |")
         print("  |   - Carrera: Ingeniería en Ciencias y Sistemas                              |")
-        print("  ______________________________________________________________________________")
+        print("  |_____________________________________________________________________________|")
         print("\n   1. Cargar menú")
         print("   2. Cargar orden")
         print("   3. Generar menú")
