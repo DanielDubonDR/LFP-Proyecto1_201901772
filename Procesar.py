@@ -24,12 +24,11 @@ class Analizar:
             columna=1
             estado=0
             string=""
-            limpiar=False
             for caracter in linea:
                 if estado==0:
                     if string.rstrip()=="restaurante":
                         estado=1
-                        asd=str("No = ")+str(self.contador)+str(", Lexema = ")+str(string)+str(", Fila = ")+str(self.contLinea)+str(", Columna = ")+str(columna)+str(", Token = Palabra Reservada")
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",   Token = Palabra Reservada]")
                         print(asd)
                         string=""
                         self.contador+=1
@@ -50,30 +49,39 @@ class Analizar:
                 if estado==1:
                     if caracter=="=":
                         columna+=1
-                        asd=str("No = ")+str(self.contador)+str(", Lexema = ")+str(caracter)+str(", Fila = ")+str(self.contLinea)+str(", Columna = ")+str(columna)+str(", Token = Signo Igual")
-                        print(asd)
-                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(caracter)+str(",    Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Signo Igual]")
+                        #print(asd)
+                        #self.contador+=1
                         estado=2
+                        continue
                     elif caracter=="'":
                         print("ERROR, se esperaba =")
                         estado=100
                         #-----------------------------corregir
-                    elif str.isalpha(caracter):
+                    elif re.search(r"[^']",caracter):
                         print("ERROR, se esperaba = y '")
                         estado=100
                 
-                if estado==3:
+                if estado==2:
                     if caracter=="'":
                         columna+=1
-                        asd=str("No = ")+str(self.contador)+str(", Lexema = ")+str(caracter)+str(", Fila = ")+str(self.contLinea)+str(", Columna = ")+str(columna)+str(", Token = Signo Igual")
-                        print(asd)
-                        self.contador+=1
-                        estado=2
-                    elif caracter=="'":
-                        print("ERROR, se esperaba =")
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(caracter)+str(",    Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",   Token = Apostrofe]")
+                        #print(asd)
+                        #self.contador+=1
+                        estado=3
+                        continue
+                    elif caracter==" ":
+                        columna+=1
+                        continue
+                    else:
+                        print("Error: hace falta '")
                         estado=100
-                    elif re.search(r"[^]",caracter):
-                        print("ERROR, se esperaba = y '")
+                if estado==3:
+                    if caracter!="'":
+                        string+=caracter
+                    else:
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
+                        print(asd)       
                         estado=100
                 
                 columna+=1
@@ -105,22 +113,119 @@ class Analizar:
             self.reservada=False
         '''
 
-        '''
-        if linea.startswith("'"):
-            self.cadena=True
-        else:
-            self.cadena=False
+        elif linea.startswith("'"):
+            columna=1
+            estado=0
+            string=""
+            for caracter in linea:
+                if estado==0:
+                    if caracter=="'":
+                        estado=1
+                        columna+=1
+                        continue
+                        
+                if estado==1:        
+                    if caracter!="'":
+                        string+=caracter
+                    else:
+                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
+                        print(asd)
+                        estado=100
+                columna+=1
+                    
 
         if linea.startswith("["):
-            self.opciones=True
-        else:
-            self.opciones=False
-            
+            columna=1
+            estado=0
+            string=""
+            for caracter in linea:
+                if estado==0:
+                    if caracter=="[":
+                        estado=1
+                        columna+=1
+                        continue
+                if estado==1:
+                    if caracter!=";":
+                        if caracter==" ":
+                            columna+=1
+                            continue
+                        else:
+                            string+=caracter
+                    else:
+                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Identificador]")
+                        print(asd)
+                        estado=2
+                        string=""
+                        continue
+                if estado==2:
+                    if caracter=="'":
+                        estado=3
+                        continue
+                
+                if estado==3:
+                    if caracter!="'":
+                        string+=caracter
+                    else:
+                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
+                        print(asd)
+                        estado=4
+                        string=""
+                        continue
+
+                if estado==4:
+                    if caracter==";":
+                        columna+=1
+                        estado=5
+                        continue
+
+                    elif caracter==" ":
+                        columna+=1
+                
+                if estado==5:
+                    if caracter!=";":
+                        if caracter==" ":
+                            columna+=1
+                            continue
+                        else:
+                            string+=caracter
+                    else:
+                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Numero]")
+                        print(asd)
+                        estado=6
+                        string=""
+                        continue
+
+                if estado==6:
+                    if caracter=="'":
+                        columna+=1
+                        estado=7
+                        continue
+                    elif caracter==" ":
+                        columna+=1
+
+                if estado==7:
+                    if caracter!="'":
+                        string+=caracter
+                    else:
+                        self.contador+=1
+                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
+                        print(asd)
+                        estado=8
+                        string=""
+                        continue        
+                columna+=1
+        '''    
         if self.reservada and self.cadena and self.opciones:
             self.error=False
         else:
             self.error=False
         '''
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
-
-a=Analizar("entrada.txt")
+print("\nIngrese la ruta del archivo: ")
+ruta=input(" > ")
+print("\n")
+a=Analizar(ruta)
