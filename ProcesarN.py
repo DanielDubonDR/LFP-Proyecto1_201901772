@@ -1,25 +1,148 @@
+from Clases.Datos import datos, error
 import re
 
 class Analizar:
     def __init__(self, ruta):
        self.ruta=ruta
-       self.contador=1
-       self.leerLinea()
+       self.texto=""
+       self.Linea=1
+       self.ListaTokens=[]
+       self.ListaErrores=[]
+       self.leerArchivo()
 
-    def leerLinea(self):
-        self.contLinea=1
-        self.reserv=""
+    def leerArchivo(self):
         archivo=open(self.ruta,'r', encoding='utf8')
-        for linea in archivo.readlines():
-            if linea=="\n":
-                self.contLinea+=1
-                continue
-            self.leerCaracteres(linea.lstrip().strip())
-            self.contLinea+=1
+        for linea in archivo:
+           self.texto+=linea
         archivo.close() 
+        self.analizar()
     
-    def leerCaracteres(self, linea):
+    def analizar(self):
+        estado=0
+        posicion=0
+        columna=1
+        string=""
+        longitud=len(self.texto)
+        while posicion<longitud:
+            columna=posicion
+            caracter=self.texto[posicion]
+            if estado==0:
+                if caracter=="r":
+                    estado=1
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
 
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+
+                elif caracter=="\n":
+                    posicion+=1
+                    columna=0
+
+                elif caracter=="'":
+                    estado=5
+                    posicion+=1
+                    columna=1
+                else:
+                    posicion+=1
+            
+            elif estado==1:
+                if string=="restaurante":
+                    estado=2
+                    posicion+=1
+                    columna+=1
+                    aux=datos("restaurante", self.Linea, columna, "Palabra Reservada")
+                    self.ListaTokens.append(aux)
+                    string=""
+
+                elif re.search(r"[a-z]",caracter):
+                        string+=caracter
+                        posicion+=1
+                        columna+=1
+                else:
+                    if caracter=="=":
+                        estado=2
+                        #print("Palabra reservada no válida",string)
+                        aux=error(string,self.Linea,columna,"Palabra reservada no válida")
+                        self.ListaErrores.append(aux)
+                        posicion+=1
+                        columna+=1
+                        string=""
+
+                    elif caracter=="'":
+                        estado=3
+                        #print("Palabra Reservada no valida",string)
+                        #print("Se esperaba =")
+                        aux=error(string,self.Linea,columna,"Palabra reservada no válida")
+                        aux2=error("=",self.Linea,columna,"Se esperaba")
+                        self.ListaErrores.append(aux)
+                        self.ListaErrores.append(aux2)
+                        posicion+=1
+                        columna+=1
+                        string=""
+                    else:
+                        #print("Caracter no válido",caracter)
+                        aux=error(caracter,self.Linea,columna,"Carácter")
+                        self.ListaErrores.append(aux)
+                        string+=caracter
+                        posicion+=1
+                        columna+=1
+                        
+            elif estado==2:
+                if caracter=="'":
+                    estado=3
+                    posicion+=1
+                    columna+=1
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                else:
+                    aux=error("'",self.Linea,columna,"Se esperaba")
+                    self.ListaErrores.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=3
+
+            elif estado==3:
+                if caracter=="'":
+                    aux=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux)
+                    string=""
+                    posicion+=1
+                    estado=0
+                elif caracter=="\n":
+                    aux=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux)
+                    aux2=error("'",self.Linea,columna,"Se esperaba")
+                    self.ListaErrores.append(aux2)
+                    string=""
+                    posicion+=1
+                    print("se esperaba '")
+                    posicion+=1
+                    estado=0
+                else:
+                    string+=caracter
+                    posicion+=1
+            #---------------------trabajar aqui
+            elif estado==5:
+                print(caracter)
+                estado=6
+
+            elif estado==6:
+                posicion+=1
+
+    def imprimirTokens(self):
+        for tokens in self.ListaTokens:
+            print(tokens)
+
+    def imprimirErrores(self):
+        for errores in self.ListaErrores:
+            print(errores)
+
+
+        '''
         if linea.startswith("r"):
             columna=1
             estado=0
@@ -85,33 +208,7 @@ class Analizar:
                         estado=100
                 
                 columna+=1
-            '''
-            if "=" in linea:
-                for caracter in linea:
-                    if estado==0:
-                        if caracter!="=":
-                            string+=caracter
-                        else:
-                            if string.rstrip()=="restaurante":
-                                reservada=string
-                                print("reservada",reservada,"Linea",self.contLinea,"Columna",cont)
-                                estado=1
-                            else:
-                                print("no se reconoce",string, "Linea",self.contLinea,"Columna",cont)
-                                estado=1
-                            string=""
-
-                    if estado==1:
-                        if caracter!="'":
-                            string+=caracter
-                        else:
-                            estado==3
-                        print(string)
-                    cont+=1
-
-        else:
-            self.reservada=False
-        '''
+            
 
         elif linea.startswith("'"):
             columna=1
@@ -218,15 +315,9 @@ class Analizar:
                         string=""
                         continue        
                 columna+=1
-        '''    
-        if self.reservada and self.cadena and self.opciones:
-            self.error=False
-        else:
-            self.error=False
-        '''
+                '''
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
-print("\nIngrese la ruta del archivo: ")
-ruta=input(" > ")
-print("\n")
-a=Analizar(ruta)
-print("\n > 201901772-Daniel Reginaldo Dubón Rodríguez ")
+
+a=Analizar("entrada.txt")
+a.imprimirTokens()
+a.imprimirErrores()
