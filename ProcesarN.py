@@ -24,7 +24,7 @@ class Analizar:
         string=""
         longitud=len(self.texto)
         while posicion<longitud:
-            columna=posicion
+            
             caracter=self.texto[posicion]
             if estado==0:
                 if caracter=="r":
@@ -39,24 +39,23 @@ class Analizar:
 
                 elif caracter=="\n":
                     posicion+=1
-                    columna=0
+                    self.Linea+=1
+                    columna=1
 
                 elif caracter=="'":
                     estado=5
                     posicion+=1
-                    columna=1
+                    columna+=1
                 else:
                     posicion+=1
             
             elif estado==1:
                 if string=="restaurante":
                     estado=2
-                    posicion+=1
-                    columna+=1
                     aux=datos("restaurante", self.Linea, columna, "Palabra Reservada")
                     self.ListaTokens.append(aux)
                     string=""
-
+                
                 elif re.search(r"[a-z]",caracter):
                         string+=caracter
                         posicion+=1
@@ -67,8 +66,6 @@ class Analizar:
                         #print("Palabra reservada no válida",string)
                         aux=error(string,self.Linea,columna,"Palabra reservada no válida")
                         self.ListaErrores.append(aux)
-                        posicion+=1
-                        columna+=1
                         string=""
 
                     elif caracter=="'":
@@ -79,39 +76,67 @@ class Analizar:
                         aux2=error("=",self.Linea,columna,"Se esperaba")
                         self.ListaErrores.append(aux)
                         self.ListaErrores.append(aux2)
-                        posicion+=1
-                        columna+=1
                         string=""
                     else:
                         #print("Caracter no válido",caracter)
-                        aux=error(caracter,self.Linea,columna,"Carácter")
+                        aux=error(caracter,self.Linea,columna,"Carácter no valido")
                         self.ListaErrores.append(aux)
                         string+=caracter
                         posicion+=1
                         columna+=1
-                        
+                    
             elif estado==2:
-                if caracter=="'":
+                
+                if caracter=="=":
                     estado=3
                     posicion+=1
                     columna+=1
+        
+                elif caracter=="'":
+                    estado=3
+
                 elif caracter==" ":
                     posicion+=1
                     columna+=1
-                else:
-                    aux=error("'",self.Linea,columna,"Se esperaba")
+
+                elif caracter.isalnum():
+                    aux=error("='",self.Linea,columna,"Se esperaba")
                     self.ListaErrores.append(aux)
+                    estado=4
+                else:
+                    aux2=error(caracter,self.Linea,columna,"Carácter inválido, es esperaba ='")
+                    self.ListaErrores.append(aux2)
                     posicion+=1
                     columna+=1
-                    estado=3
-
+                
             elif estado==3:
                 if caracter=="'":
+                    estado=4
+                    posicion+=1
+                    columna+=1
+                
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                elif caracter.isalnum():
+                    aux=error("'",self.Linea,columna,"Se esperaba")
+                    self.ListaErrores.append(aux)
+                    estado=4
+                else:
+                    aux2=error(caracter,self.Linea,columna,"Carácter inválido, se esperaba '")
+                    self.ListaErrores.append(aux2)
+                    posicion+=1
+                    columna+=1
+                
+
+            elif estado==4:
+                if caracter=="'":
+                    posicion+=1
+                    estado=0
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
                     string=""
-                    posicion+=1
-                    estado=0
+                    columna+=1
                 elif caracter=="\n":
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
@@ -119,14 +144,16 @@ class Analizar:
                     self.ListaErrores.append(aux2)
                     string=""
                     posicion+=1
-                    print("se esperaba '")
-                    posicion+=1
                     estado=0
+                
                 else:
                     string+=caracter
                     posicion+=1
+                    columna+=1
             #---------------------trabajar aqui
             elif estado==5:
+                print(columna)
+                print(self.Linea)
                 print(caracter)
                 estado=6
 
