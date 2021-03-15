@@ -46,6 +46,12 @@ class Analizar:
                     estado=5
                     posicion+=1
                     columna+=1
+
+                elif caracter=="[":
+                    estado=8
+                    posicion+=1
+                    columna+=1
+
                 else:
                     posicion+=1
             
@@ -152,12 +158,53 @@ class Analizar:
                     columna+=1
             #---------------------trabajar aqui
             elif estado==5:
-                print(columna)
-                print(self.Linea)
-                print(caracter)
-                estado=6
+                if caracter=="'":
+                    aux=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=6
+                elif caracter==":":
+                    aux=error("'", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=6
+                elif caracter=="\n":
+                    aux=error("':", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=0
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
 
             elif estado==6:
+                if caracter==":":
+                    aux=datos(string.replace("'",""), self.Linea, columna, "Nombre de sección")
+                    self.ListaTokens.append(aux)
+                    string=""
+                    estado=0
+                    posicion+=1
+                    columna+=1
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                elif caracter=="\n":
+                    aux=error("':", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=0
+                else:
+                    aux=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux)
+                    posicion+=1
+                    columna+=1
+            #trabajar aca    
+            elif estado==8:
                 posicion+=1
 
     def imprimirTokens(self):
