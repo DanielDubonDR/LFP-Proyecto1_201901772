@@ -205,6 +205,95 @@ class Analizar:
                     columna+=1
             #trabajar aca    
             elif estado==8:
+                if caracter==";":
+                    verificar = re.search("[a-z][a-z0-9_]*",string)
+                    if string.lstrip().rstrip()==verificar.group():
+                        aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                        self.ListaTokens.append(aux)
+                        estado=9
+                        string=""
+                        posicion+=1
+                        columna+=1
+                    else:
+                        #print("identificador no valido", string.lstrip())
+                        aux=error(string, self.Linea, columna, "Identificador inválido")
+                        self.ListaErrores.append(aux)
+                        estado=9
+                        string=""
+                        posicion+=1
+                        columna+=1
+                elif caracter=="'":
+                    aux=error(";", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    verificar = re.search("[a-z][a-z0-9_]*",string)
+                    if string.lstrip().rstrip()==verificar.group():
+                        aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                        self.ListaTokens.append(aux)
+                        estado=10
+                        string=""
+                    else:
+                        #print("identificador no valido", string.lstrip())
+                        aux=error(string, self.Linea, columna, "Identificador inválido")
+                        self.ListaErrores.append(aux)
+                        estado=10
+                        string=""
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+
+            elif estado==9:
+                if caracter=="'":
+                    estado=10
+                    posicion+=1
+                    columna+=1
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                else:
+                    estado=10
+                    aux=error("'", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+            
+            elif estado==10:
+                if caracter=="'":
+                    aux=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=11
+                    string=""
+                elif caracter==";":
+                    aux=error("'", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=12
+                    string=""
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+
+            elif estado==11:
+                if caracter==";":
+                    estado=12
+                    columna+=1
+                    posicion+=1
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                elif caracter.isdigit():
+                    estado=12
+                    aux=error(";", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+            #---------------trabajar desde aqui, es recibir numero
+            elif estado==12:
+                print(caracter)
+                print(string)
+                estado=15
+            
+            elif estado==15:
                 posicion+=1
 
     def imprimirTokens(self):
@@ -217,93 +306,6 @@ class Analizar:
 
 
         '''
-        if linea.startswith("r"):
-            columna=1
-            estado=0
-            string=""
-            for caracter in linea:
-                if estado==0:
-                    if string.rstrip()=="restaurante":
-                        estado=1
-                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",   Token = Palabra Reservada]")
-                        print(asd)
-                        string=""
-                        self.contador+=1
-
-                    elif caracter=="=":
-                        estado=2
-
-                    elif caracter=="'":
-                        estado=3
-
-                    else:
-                        if re.search(r"[a-z]",caracter):
-                            string+=caracter
-                        else:
-                            string+=caracter
-                            print("caracter desconocido",caracter)
-
-                if estado==1:
-                    if caracter=="=":
-                        columna+=1
-                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(caracter)+str(",    Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Signo Igual]")
-                        #print(asd)
-                        #self.contador+=1
-                        estado=2
-                        continue
-                    elif caracter=="'":
-                        print("ERROR, se esperaba =")
-                        estado=100
-                        #-----------------------------corregir
-                    elif re.search(r"[^']",caracter):
-                        print("ERROR, se esperaba = y '")
-                        estado=100
-                
-                if estado==2:
-                    if caracter=="'":
-                        columna+=1
-                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(caracter)+str(",    Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",   Token = Apostrofe]")
-                        #print(asd)
-                        #self.contador+=1
-                        estado=3
-                        continue
-                    elif caracter==" ":
-                        columna+=1
-                        continue
-                    else:
-                        print("Error: hace falta '")
-                        estado=100
-                if estado==3:
-                    if caracter!="'":
-                        string+=caracter
-                    else:
-                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
-                        print(asd)       
-                        estado=100
-                
-                columna+=1
-            
-
-        elif linea.startswith("'"):
-            columna=1
-            estado=0
-            string=""
-            for caracter in linea:
-                if estado==0:
-                    if caracter=="'":
-                        estado=1
-                        columna+=1
-                        continue
-                        
-                if estado==1:        
-                    if caracter!="'":
-                        string+=caracter
-                    else:
-                        self.contador+=1
-                        asd=str("[No = ")+str(self.contador)+str(",    Lexema = ")+str(string)+str(",   Fila = ")+str(self.contLinea)+str(",    Columna = ")+str(columna)+str(",    Token = Cadena]")
-                        print(asd)
-                        estado=100
-                columna+=1
                     
 
         if linea.startswith("["):
