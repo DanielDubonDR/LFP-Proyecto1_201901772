@@ -176,6 +176,8 @@ class Analizar:
                     aux2=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux2)
                     estado=0
+                    string=""
+                    posicion+=1
                 else:
                     string+=caracter
                     posicion+=1
@@ -183,8 +185,8 @@ class Analizar:
 
             elif estado==6:
                 if caracter==":":
-                    aux=datos(string.replace("'",""), self.Linea, columna, "Nombre de sección")
-                    self.ListaTokens.append(aux)
+                    #aux=datos(string.replace("'",""), self.Linea, columna, "Nombre de sección")
+                    #self.ListaTokens.append(aux)
                     string=""
                     estado=0
                     posicion+=1
@@ -193,11 +195,12 @@ class Analizar:
                     posicion+=1
                     columna+=1
                 elif caracter=="\n":
-                    aux=error("':", self.Linea, columna, "Se esperaba")
+                    aux=error(":", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
-                    aux2=datos(string, self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux2)
+                    #aux2=datos(string, self.Linea, columna, "Cadena")
+                    #self.ListaTokens.append(aux2)
                     estado=0
+                    string=""
                 else:
                     aux=error(caracter, self.Linea, columna, "Carácter inválido")
                     self.ListaErrores.append(aux)
@@ -289,20 +292,147 @@ class Analizar:
                     self.ListaErrores.append(aux)
             #---------------trabajar desde aqui, es recibir numero
             elif estado==12:
-                print(caracter)
-                print(string)
-                estado=15
+                if caracter==";":
+                    posicion+=1
+                    estado=13
+                    numero=self.verificarNumero(string.rstrip().lstrip())
+                    if "Formato" in numero:
+                        aux2=error(string.rstrip().lstrip(),self.Linea,columna,numero)
+                        self.ListaErrores.append(aux2)
+                    else:
+                        aux=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
+                        self.ListaTokens.append(aux)
+                    string=""
+                    columna+=1
+                elif caracter=="'":
+                    numero=self.verificarNumero(string.rstrip().lstrip())
+                    if "Formato" in numero:
+                        aux2=error(string.rstrip().lstrip(),self.Linea,columna,numero)
+                        self.ListaErrores.append(aux2)
+                    else:
+                        aux=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
+                        self.ListaTokens.append(aux)
+                    aux2=error("'",self.Linea,columna,"Se esperaba")
+                    self.ListaErrores.append(aux2)
+                    string=""
+                    posicion+=1
+                    estado=13
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+
+                
+
+            elif estado==13:
+                if caracter=="'":
+                    estado=14
+                    posicion+=1
+                    columna+=1
+                elif caracter==" ":
+                    posicion+=1
+                    columna+=1
+                else:
+                    estado=14
+                    aux=error("'", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+            
+            elif estado==14:
+                if caracter=="'":
+                    aux=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=15
+                    string=""
+                elif caracter=="]":
+                    aux=error("'", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=16
+                    string=""
+                elif caracter=="\n":
+                    aux=error("']", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=16
+                    string=""
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+                
             
             elif estado==15:
-                posicion+=1
+                if caracter=="]":
+                    posicion+=1
+                    columna+=1
+                    estado=16
+                elif caracter=="\n":
+                    aux=error("]", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    estado=16
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+
+            elif estado==16:
+                estado=0
 
     def imprimirTokens(self):
+        cont=1
         for tokens in self.ListaTokens:
-            print(tokens)
+            print(cont,tokens)
+            cont+=1
 
     def imprimirErrores(self):
         for errores in self.ListaErrores:
             print(errores)
+
+    def verificarNumero(self,txt):
+        cont=0
+        for buscar in txt:
+            if "." in buscar:
+                cont+=1
+
+        if cont==1:
+            cadena=txt.split(".")
+            if " " in cadena[0]:
+                return "Formato inválido, no se aceptan espacios"
+            elif  cadena[0]=="" or cadena[0].isdigit()==False:
+                return "Formato inválido, se esperaba digitos antes del punto"
+            else:
+                if cadena[1].isdigit() or cadena[1].isspace() or cadena[1]=="":
+                    if cadena[1].isspace() or cadena[1]=="":
+                        txt+="00"
+                        return txt
+                    else:
+                        if " " in cadena[1]:
+                            return "Formato inválido, no se aceptan espacios"
+                        elif len(cadena[1])>2:
+                            aux=float(txt)
+                            redondeado = round(aux, 2)
+                            return  str(redondeado)
+                        elif len(cadena[1])==2:
+                            return txt
+                        elif len(cadena[1])==1:
+                            txt+="0"
+                            return txt
+                else:
+                    return "Formato inválido, se esperaba o no digitos después del punto"
+
+        elif cont>1:
+            return  "Formato inválido, contiene mas dos puntos"
+
+        elif cont==0:
+            if txt.isdigit():
+                txt+=".00"
+                return txt
+            else:
+                return "Formato inválido, no son digitos"
 
 
         '''
