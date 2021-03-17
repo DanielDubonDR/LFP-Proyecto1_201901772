@@ -1,4 +1,5 @@
 from Clases.Datos import datos, error
+from Clases.Dt import Seccion, Opciones
 import re
 
 class Analizar:
@@ -6,10 +7,11 @@ class Analizar:
        self.ruta=ruta
        self.texto=""
        self.Linea=1
+       self.contadorSecciones=0
        self.ListaTokens=[]
        self.ListaErrores=[]
+       self.ListaSecciones=[]
        self.leerArchivo()
-       
 
     def leerArchivo(self):
         archivo=open(self.ruta,'r', encoding='utf8')
@@ -48,6 +50,7 @@ class Analizar:
                     estado=5
                     posicion+=1
                     columna+=1
+                    self.contadorSecciones+=1
 
                 elif caracter=="[":
                     estado=8
@@ -166,6 +169,8 @@ class Analizar:
                     posicion+=1
                     columna+=1
                     estado=6
+                    z=Seccion(self.contadorSecciones,string)
+                    self.ListaSecciones.append(z)
                 elif caracter==":":
                     aux=error("'", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
@@ -419,6 +424,10 @@ class Analizar:
         for errores in self.ListaErrores:
             print(errores)
 
+    def imprimirSecciones(self):
+        for errores in self.ListaSecciones:
+            print(errores)
+
     def verificarNumero(self,txt):
         cont=0
         for buscar in txt:
@@ -467,8 +476,9 @@ class Analizar:
         return self.ListaErrores
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
-'''
 a=Analizar("Archivos_Prueba\entrada.txt")
+a.imprimirSecciones()
+'''
 a.imprimirTokens()
 a.imprimirErrores()
 '''
