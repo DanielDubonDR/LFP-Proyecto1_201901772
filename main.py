@@ -1,57 +1,87 @@
 #-----------------------------------------------LIBRERIAS/MODULOS--------------------------------------------
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from Procesar import Analizar
+from Funciones.ReporteMenuEr import generarR
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
 #----------------------------------------------VARIABLES GLOBALES--------------------------------------------
-ruta=""
+rutaMenu=""
+rutaOrden=""
 #-----------------------------------------------FILE CHOOSER-------------------------------------------------
-def obtenerArchivo():
-    global ruta
-    #Tk().withdraw() 
+
+#-------------------------------------------------MENU-------------------------------------------------------
+def cargarMenu():
+    global rutaMenu
+    print("\n----------------------------------CARGAR ARCHIVO----------------------------------\n")
     try:
-        ruta = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.txt*"), ("all files", "*.*")))
+        rutaMenu = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.txt*"), ("all files", "*.*")))
+        if rutaMenu=="":
+            print(" > ERROR: No se seleccionó ningún archivo")
+            input("\n- PRESIONE ENTER PARA CONTINUAR...")
+        else:
+            print(" > Archivo cargado")
+            input("\n- PRESIONE ENTER PARA CONTINUAR...")
     except:
         print(" > ERROR: No se seleccionó ningún archivo o el archivo no cumple con el formato")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
-#-------------------------------------------------MENU-------------------------------------------------------
-def cargarMenu():
-    obtenerArchivo()
-
 def cargarOrden():
-    if ruta!="":
-       print("hola")
-    else:
-        print("  > ERROR: No se ha cargado ningún archivo")
+    print("\n----------------------------------CARGAR ARCHIVO----------------------------------\n")
+    global rutaOrden
+    try:
+        rutaOrden = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.txt*"), ("all files", "*.*")))
+        if rutaOrden=="":
+            print(" > ERROR: No se seleccionó ningún archivo")
+            input("\n- PRESIONE ENTER PARA CONTINUAR...")
+        else:
+            print(" > Archivo cargado")
+            input("\n- PRESIONE ENTER PARA CONTINUAR...")
+    except:
+        print(" > ERROR: No se seleccionó ningún archivo o el archivo no cumple con el formato")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
+   
 
 def generarMenu():
-    if ruta!="":
-        print("hola")
+    print("\n-----------------------------------GENERAR MENÚ-----------------------------------\n")
+    if rutaMenu!="":
+        try:
+            a=Analizar(rutaMenu)
+            tokens=a.getListaTokens()
+            errores=a.getListaErrores()
+            if errores==None:
+                print("  - ¿Desea poner un límite en los precios?")
+                print("     1. Sí")
+                print("     2. No\n")
+                opcion=int(input("  - Ingrese una opción:\n     > "))
+            else:
+                print("  > ERROR: El archivo contiene errores")
+                generarR(errores,tokens)
+                input(" - PRESIONE ENTER PARA CONTINUAR...")
+        except:
+            print("  > ERROR: Ocurrio un error de análisis")
+            input(" - PRESIONE ENTER PARA CONTINUAR...")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def generarFactura():
-    if ruta!="":
+    print("\n-----------------------------------GENERAR ORDEN----------------------------------\n")
+    if rutaOrden!="":
         print("hola")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def generarArbol():
-    if ruta!="":
+    if rutaMenu!="":
         print("hola")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def salir():
-    print("\n  > Nombre: Daniel Reginaldo Dubón Rodríguez")
-    print("  > Carné: 201901772")
-    print("  > Carrera: Ingeniería en Ciencias y Sistemas\n")
     print("  > Saliendo...\n")
 
 def menu():

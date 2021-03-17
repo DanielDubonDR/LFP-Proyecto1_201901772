@@ -460,9 +460,15 @@ class Analizar:
                 return txt
             else:
                 return "Formato inválido, no son digitos"
+    def getListaTokens(self):
+        return self.ListaTokens
+    
+    def getListaErrores(self):
+        return self.ListaErrores
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
-
-a=Analizar("entrada.txt")
+'''
+a=Analizar("Archivos_Prueba\entrada.txt")
 a.imprimirTokens()
 a.imprimirErrores()
+'''
