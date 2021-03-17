@@ -8,9 +8,11 @@ class Analizar:
        self.texto=""
        self.Linea=1
        self.contadorSecciones=0
+       self.nombreRestaurtante=""
        self.ListaTokens=[]
        self.ListaErrores=[]
        self.ListaSecciones=[]
+       self.ListaOpciones=[]
        self.leerArchivo()
 
     def leerArchivo(self):
@@ -27,6 +29,11 @@ class Analizar:
         string=""
         noIdentificados="~!@#$%^&*()_+-|/¿¡?{[}]´."
         longitud=len(self.texto)
+        idseccion=None
+        identificador=None
+        nombre=None
+        precio=None
+        descripcion=None
         while posicion<longitud:
             
             caracter=self.texto[posicion]
@@ -146,6 +153,7 @@ class Analizar:
                     estado=0
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
+                    self.nombreRestaurtante=string
                     string=""
                     columna+=1
                 elif caracter=="\n":
@@ -171,6 +179,7 @@ class Analizar:
                     estado=6
                     z=Seccion(self.contadorSecciones,string)
                     self.ListaSecciones.append(z)
+                    idseccion=self.contadorSecciones
                 elif caracter==":":
                     aux=error("'", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
@@ -220,6 +229,7 @@ class Analizar:
                     if string.lstrip().rstrip()==verificar.group():
                         aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
                         self.ListaTokens.append(aux)
+                        identificador=string.lstrip().rstrip()
                         estado=9
                         string=""
                         posicion+=1
@@ -274,6 +284,7 @@ class Analizar:
                 if caracter=="'":
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
+                    nombre=string
                     posicion+=1
                     columna+=1
                     estado=11
@@ -319,6 +330,7 @@ class Analizar:
                     else:
                         aux=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
                         self.ListaTokens.append(aux)
+                        precio=numero
                     string=""
                     columna+=1
                 elif caracter=="'":
@@ -363,10 +375,13 @@ class Analizar:
                 if caracter=="'":
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
+                    descripcion=string
                     posicion+=1
                     columna+=1
                     estado=15
                     string=""
+                    z=Opciones(idseccion,identificador,nombre,precio,descripcion)
+                    self.ListaOpciones.append(z)
                 elif caracter=="]":
                     aux=error("'", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
@@ -428,6 +443,10 @@ class Analizar:
         for errores in self.ListaSecciones:
             print(errores)
 
+    def imprimirOpciones(self):
+        for errores in self.ListaOpciones:
+            print(errores)
+
     def verificarNumero(self,txt):
         cont=0
         for buscar in txt:
@@ -476,9 +495,11 @@ class Analizar:
         return self.ListaErrores
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
+'''
 a=Analizar("Archivos_Prueba\entrada.txt")
 a.imprimirSecciones()
-'''
+a.imprimirOpciones()
+print(a.nombreRestaurtante)
 a.imprimirTokens()
 a.imprimirErrores()
 '''

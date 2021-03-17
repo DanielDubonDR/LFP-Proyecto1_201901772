@@ -8,12 +8,12 @@ class Seccion:
 
 class Opciones:
     
-    def __init__(self):
-        self.idseccion=None
-        self.identificador=None
-        self.nombre=None
-        self.precio=None
-        self.descripcion=None
+    def __init__(self, idseccion, identificador, nombre, precio, descripcion):
+        self.idseccion=idseccion
+        self.identificador=identificador
+        self.nombre=nombre
+        self.precio=precio
+        self.descripcion=descripcion
        
 
     def setIdseccion(self, idseccion):
@@ -34,6 +34,8 @@ class Opciones:
     def __str__(self):
         string=str(self.idseccion)+str(" ")+str(self.identificador)+str(" ")+str(self.nombre)+str(" ")+str(self.precio)+str(" ")+str(self.descripcion)
         return string    
+    
+
 
 '''
     def __init__(self, idseccion, identificador, nombre, precio, descripcion):
