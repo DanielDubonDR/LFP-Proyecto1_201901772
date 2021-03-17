@@ -3,6 +3,7 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from Procesar import Analizar
 from Funciones.ReporteMenuEr import generarR
+from Funciones.Menu import generarM
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
@@ -50,11 +51,19 @@ def generarMenu():
             a=Analizar(rutaMenu)
             tokens=a.getListaTokens()
             errores=a.getListaErrores()
-            if errores==None:
+            if len(errores)==0:
                 print("  - ¿Desea poner un límite en los precios?")
                 print("     1. Sí")
                 print("     2. No\n")
                 opcion=int(input("  - Ingrese una opción:\n     > "))
+                if opcion==1:
+                    print("no lo he programado")
+                elif opcion==2:
+                    generarM(a.getNombre(),a.getListaSecciones(),a.getListaOpciones())
+                    print("     > Menú generado")
+                    input("\n - PRESIONE ENTER PARA CONTINUAR...")
+                else:
+                    print("  > ERROR: Opción no válida")
             else:
                 print("  > ERROR: El archivo contiene errores")
                 generarR(errores,tokens)

@@ -494,6 +494,15 @@ class Analizar:
     def getListaErrores(self):
         return self.ListaErrores
 
+    def getListaSecciones(self):
+        return self.ListaSecciones
+
+    def getListaOpciones(self):
+        return self.ListaOpciones
+
+    def getNombre(self):
+        return self.nombreRestaurtante
+
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
 '''
 a=Analizar("Archivos_Prueba\entrada.txt")
