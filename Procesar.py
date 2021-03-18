@@ -275,6 +275,11 @@ class Analizar:
                     self.ListaErrores.append(aux2)
                     posicion+=1
                     columna+=1
+                elif caracter.isdigit():
+                    aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux2)
+                    posicion+=1
+                    columna+=1
                 else:
                     estado=10
                     aux=error("'", self.Linea, columna, "Se esperaba")
@@ -362,6 +367,11 @@ class Analizar:
                     posicion+=1
                     columna+=1
                 elif caracter in noIdentificados:
+                    aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux2)
+                    posicion+=1
+                    columna+=1
+                elif caracter.isdigit():
                     aux2=error(caracter, self.Linea, columna, "Carácter inválido")
                     self.ListaErrores.append(aux2)
                     posicion+=1

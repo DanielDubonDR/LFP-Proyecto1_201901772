@@ -55,7 +55,6 @@ class AnalizarOrden:
                 if caracter=="'":
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
-                    nombre=string
                     posicion+=1
                     columna+=1
                     estado=2
@@ -65,13 +64,7 @@ class AnalizarOrden:
                     self.ListaErrores.append(aux)
                     aux2=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux2)
-                    estado=3
-                    string=""
-                    aux=error("'", self.Linea, columna, "Se esperaba")
-                    self.ListaErrores.append(aux)
-                    aux2=datos(string, self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux2)
-                    estado=3
+                    estado=2
                     string=""
                 else:
                     string+=caracter
@@ -91,13 +84,19 @@ class AnalizarOrden:
                     self.ListaErrores.append(aux2)
                     posicion+=1
                     columna+=1
-                elif caracter.isdigit():
-                    aux2=error(caracter, self.Linea, columna, "Carácter inválido")
-                    self.ListaErrores.append(aux2)
-                    posicion+=1
-                    columna+=1
                 elif caracter=="'":
-                    estado=4
+                    estado=1
+                else:
+                    if caracter.isdigit():
+                        aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                        self.ListaErrores.append(aux2)
+                        posicion+=1
+                        columna+=1
+                    elif caracter.isalpha():
+                        aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                        self.ListaErrores.append(aux2)
+                        posicion+=1
+                        columna+=1
             
             elif estado==3:
                 if caracter=="'":
@@ -116,7 +115,28 @@ class AnalizarOrden:
                     estado=4
 
             elif estado==4:
+                if caracter=="%":
+                    aux=datos(string+caracter, self.Linea, columna, "Propina")
+                    self.ListaTokens.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=8
+                    string=""
+                elif caracter=="\n":
+                    aux=error("%", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string+"%", self.Linea, columna, "Cadena")
+                    self.ListaTokens.append(aux2)
+                    estado=8
+                    string=""
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+            
+            elif estado==8:
                 posicion+=1
+                    
 
     def imprimirTokens(self):
         cont=1
