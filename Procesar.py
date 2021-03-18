@@ -27,7 +27,7 @@ class Analizar:
         posicion=0
         columna=1
         string=""
-        noIdentificados="~!@#$%^&*()_+-|/¿¡?{[}]´."
+        noIdentificados="~!@#$%^&*()\,_+-|/¿¡?{[}]´."
         longitud=len(self.texto)
         idseccion=None
         identificador=None

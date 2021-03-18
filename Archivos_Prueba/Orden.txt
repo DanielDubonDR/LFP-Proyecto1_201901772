@@ -1,0 +1,5 @@
+'Daniel', '4573', 'ciudad', 8%
+2,bebida_1
+4, pops_001
+7, pojs_004
+1, pgos_006
