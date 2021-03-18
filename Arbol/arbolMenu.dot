@@ -1,0 +1,28 @@
+// Grafica
+digraph {
+	0 [label="Restaurante LFP"]
+	1 [label=Bebidas]
+	0 -> 1
+	2 [label=Desayunos]
+	0 -> 2
+	3 [label="  Postres"]
+	0 -> 3
+	bebida_2 [label="Bebida #2   Q10.50
+Descripción Bebida 2"]
+	1 -> bebida_2
+	bebida_1 [label="Bebida #1   Q11.00
+Descripción Bebida 1"]
+	1 -> bebida_1
+	pos_001 [label="Postre 1   Q25.00
+Descripción Postre 1"]
+	3 -> pos_001
+	d3 [label="Desayuno 3   Q35.00
+Descripción Desayuno3"]
+	2 -> d3
+	d2 [label="Desayuno 2   Q40.00
+Descripción Desayuno 2"]
+	2 -> d2
+	d1 [label="Desayuno 1   Q45.00
+Descripción Desayuno 1"]
+	2 -> d1
+}

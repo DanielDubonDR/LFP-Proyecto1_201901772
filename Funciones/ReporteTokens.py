@@ -8,7 +8,7 @@ def cabecera():
     texto=""
     c="""<!DOCTYPE html>
     <html>
-    <title>Reporte Errores</title>
+    <title>Reporte Tokens</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -24,42 +24,12 @@ def cabecera():
         <h1 class="w3-lobster w3-xxxlarge">Reporte Menú</h1>
         <br><br>
     </div>
-    
-    <div class="w3-container w3-center">
-        <div class="w3-container w3-lobster">
-        <p class="w3-xxxlarge">Tabla de Errores<p>
-        </div>
-        <table class="w3-table-all w3-margin-top w3-card-4 w3-hoverable">
-        <tr class="w3-pink">
-            <th style="width:10%;" class="w3-center">No.</th>
-            <th style="width:15%;" class="w3-center">Línea</th>
-            <th style="width:15%;" class="w3-center">Columna</th>
-            <th style="width:20%;" class="w3-center">Carácter</th>
-            <th style="width:40%;" class="w3-center">Descripción</th>
-        </tr>
         """
     texto+=c
-def imprimirErr(errores):
-    global texto
-    cont=1
-    for e in errores:
-        texto+='''
-        <tr>
-        <td class="w3-center">'''+str(cont)+'''</td>
-        <td class="w3-center">'''+str(e.Linea)+'''</td>
-        <td class="w3-center">'''+str(e.columna)+'''</td>
-        <td class="w3-center">'''+str(e.lexema)+'''</td>
-        <td class="w3-center">'''+str(e.descripcion)+'''</td> 
-        </tr>
-        '''
-        cont+=1
 
 def imprimirTK(tokens):
     global texto
     texto+='''
-    </table>
-  </div><br><br>
-
   <div class="w3-container w3-center">
     <div class="w3-container w3-lobster">
       <p class="w3-xxxlarge">Tabla de Tokens<p>
@@ -99,14 +69,12 @@ def imprimirTK(tokens):
     '''
 def crearArchivo():
     global texto
-    arhcivo=open('Reporte_Errores_Menu.html','w')
+    arhcivo=open('Reporte_Tokens.html','w')
     arhcivo.write(texto)
     arhcivo.close()
-    os.startfile("Reporte_Errores_Menu.html")
+    os.startfile("Reporte_Tokens.html")
 
-def generarR(errores, tokens):
+def generarT(tokens):
     cabecera()
-    imprimirErr(errores)
     imprimirTK(tokens)
     crearArchivo()
-    

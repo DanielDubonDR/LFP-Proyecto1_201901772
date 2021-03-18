@@ -4,6 +4,9 @@ from tkinter.filedialog import askopenfilename
 from Procesar import Analizar
 from Funciones.ReporteMenuEr import generarR
 from Funciones.Menu import generarM
+from Funciones.ReporteTokens import generarT
+from Funciones.MenuFiltro import generarFl
+from Funciones.generarArbol import generarA
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
@@ -57,9 +60,14 @@ def generarMenu():
                 print("     2. No\n")
                 opcion=int(input("  - Ingrese una opción:\n     > "))
                 if opcion==1:
-                    print("no lo he programado")
+                    lim=float(input("  - Ingrese el límite del precio:\n     > "))
+                    generarFl(a.getNombre(),a.getListaSecciones(),a.getListaOpciones(),lim)
+                    generarT(tokens)
+                    print("     > Menú generado")
+                    input("\n - PRESIONE ENTER PARA CONTINUAR...")
                 elif opcion==2:
                     generarM(a.getNombre(),a.getListaSecciones(),a.getListaOpciones())
+                    generarT(tokens)
                     print("     > Menú generado")
                     input("\n - PRESIONE ENTER PARA CONTINUAR...")
                 else:
@@ -84,8 +92,22 @@ def generarFactura():
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def generarArbol():
+    print("\n-----------------------------------GENERAR ÁRBOL----------------------------------\n")
     if rutaMenu!="":
-        print("hola")
+        try:
+            a=Analizar(rutaMenu)
+            tokens=a.getListaTokens()
+            errores=a.getListaErrores()
+            if len(errores)==0:
+                generarA(a.getNombre(),a.getListaSecciones(),a.getListaOpciones())
+                print("    > Árbol generado")
+                input("\n - PRESIONE ENTER PARA CONTINUAR...")
+            else:
+                print("  > ERROR: El archivo contiene errores, no se puede generar")
+                input(" - PRESIONE ENTER PARA CONTINUAR...")
+        except:
+            print("  > ERROR: Ocurrio un error de análisis")
+            input(" - PRESIONE ENTER PARA CONTINUAR...")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")

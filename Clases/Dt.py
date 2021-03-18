@@ -35,7 +35,8 @@ class Opciones:
         string=str(self.idseccion)+str(" ")+str(self.identificador)+str(" ")+str(self.nombre)+str(" ")+str(self.precio)+str(" ")+str(self.descripcion)
         return string    
     
-
+    def __gt__(self, lista):
+        return float(self.precio)>float(lista.precio)
 
 '''
     def __init__(self, idseccion, identificador, nombre, precio, descripcion):

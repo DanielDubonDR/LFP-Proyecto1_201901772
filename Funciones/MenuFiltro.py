@@ -52,7 +52,7 @@ def quitarDescripcion(string):
     else:
         return string
 
-def generarCuerpo(secciones, opciones):
+def generarCuerpo(secciones, opciones,lim):
     global texto
     texto+="<br>"
     for sec in secciones:
@@ -72,7 +72,7 @@ def generarCuerpo(secciones, opciones):
                                 </tr>
         '''
         for op in opciones:
-            if sec.id==op.idseccion:
+            if sec.id==op.idseccion and float(op.precio)<=lim:
                 texto+='''
                 <tr>
                           <td class="w3-center w3-Asap-Condensed w3-large">'''+str(op.nombre)+'''</td>
@@ -103,7 +103,7 @@ def crearArchivo():
     arhcivo.close()
     os.startfile("Menu.html")
 
-def generarM(nombre, secciones, opciones):
+def generarFl(nombre, secciones, opciones,lim):
     cabecera(nombre)
-    generarCuerpo(secciones, opciones)
+    generarCuerpo(secciones, opciones, lim)
     crearArchivo()
