@@ -20,6 +20,7 @@ class Analizar:
         for linea in archivo:
            self.texto+=linea
         archivo.close() 
+        self.texto+="\n"
         self.analizar()
     
     def analizar(self):

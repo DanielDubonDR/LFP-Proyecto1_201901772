@@ -16,6 +16,7 @@ class AnalizarOrden:
         for linea in archivo:
            self.texto+=linea
         archivo.close() 
+        self.texto+="\n"
         self.analizar()
     
     def analizar(self):
@@ -24,6 +25,7 @@ class AnalizarOrden:
         columna=1
         string=""
         noIdentificados="~!@#$%^&*()_+-|;\/¿¡?{[}]´."
+        noIdentificados2="~!@#$%^&*()+-|;\/¿¡?{[}]´."
         longitud=len(self.texto)
         while posicion<longitud:
 
@@ -44,7 +46,8 @@ class AnalizarOrden:
                     columna=1
 
                 elif caracter.isdigit():
-                    estado=10
+                    estado=5
+                    string+=caracter
                     posicion+=1
                     columna+=1
 
@@ -86,6 +89,10 @@ class AnalizarOrden:
                     columna+=1
                 elif caracter=="'":
                     estado=1
+                    aux=error(",", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    posicion+=1
+                    columna+=1
                 else:
                     if caracter.isdigit():
                         aux2=error(caracter, self.Linea, columna, "Carácter inválido")
@@ -116,26 +123,91 @@ class AnalizarOrden:
 
             elif estado==4:
                 if caracter=="%":
+                    '''
                     aux=datos(string+caracter, self.Linea, columna, "Propina")
                     self.ListaTokens.append(aux)
+                    '''
+                    numero=self.verificarPorcentaje(string.rstrip().lstrip())
+                    if "Formato" in numero:
+                        aux2=error(string.rstrip().lstrip(),self.Linea,columna,numero)
+                        self.ListaErrores.append(aux2)
+                        aux=datos(string.rstrip().lstrip()+str("%"), self.Linea, columna, "Porcentaje")
+                        self.ListaTokens.append(aux)
+                    else:
+                        aux=datos(string.rstrip().lstrip()+str("%"), self.Linea, columna, "Porcentaje")
+                        self.ListaTokens.append(aux)
                     posicion+=1
                     columna+=1
-                    estado=8
+                    estado=0
                     string=""
                 elif caracter=="\n":
                     aux=error("%", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
-                    aux2=datos(string+"%", self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux2)
-                    estado=8
+                    numero=self.verificarPorcentaje(string.rstrip().lstrip())
+                    if "Formato" in numero:
+                        aux2=error(string.rstrip().lstrip(),self.Linea,columna,numero)
+                        self.ListaErrores.append(aux2)
+                        aux=datos(string.rstrip().lstrip()+str("%"), self.Linea, columna, "Porcentaje")
+                        self.ListaTokens.append(aux)
+                    else:
+                        aux=datos(string.rstrip().lstrip()+str("%"), self.Linea, columna, "Porcentaje")
+                        self.ListaTokens.append(aux)
+                    estado=0
                     string=""
                 else:
                     string+=caracter
                     posicion+=1
                     columna+=1
             
-            elif estado==8:
-                posicion+=1
+            elif estado==5:
+                if caracter==",":
+                    aux=datos(string, self.Linea, columna, "Número")
+                    self.ListaTokens.append(aux)
+                    posicion+=1
+                    columna+=1
+                    estado=6
+                    string=""
+                elif caracter.isalpha():
+                    aux=error(",", self.Linea, columna, "Se esperaba")
+                    self.ListaErrores.append(aux)
+                    aux2=datos(string, self.Linea, columna, "Número")
+                    self.ListaTokens.append(aux2)
+                    estado=6
+                    string=""
+                elif caracter in noIdentificados:
+                    aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux2)
+                    posicion+=1
+                    columna+=1
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
+
+            elif estado==6:
+                if caracter=="\n":
+                    verificar = re.search("[a-z][a-z0-9_]*",string)
+                    if string.lstrip().rstrip()==verificar.group():
+                        aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                        self.ListaTokens.append(aux)
+                        identificador=string.lstrip().rstrip()
+                        estado=0
+                        string=""
+                    else:
+                        #print("identificador no valido", string.lstrip())
+                        aux=error(string, self.Linea, columna, "Identificador inválido")
+                        self.ListaErrores.append(aux)
+                        estado=0
+                        string=""
+                elif caracter in noIdentificados2:
+                    aux2=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux2)
+                    posicion+=1
+                    columna+=1
+                else:
+                    string+=caracter
+                    posicion+=1
+                    columna+=1
                     
 
     def imprimirTokens(self):
@@ -149,7 +221,7 @@ class AnalizarOrden:
             print(errores)
 
 
-    def verificarNumero(self,txt):
+    def verificarPorcentaje(self,txt):
         cont=0
         for buscar in txt:
             if "." in buscar:
@@ -162,34 +234,42 @@ class AnalizarOrden:
             elif  cadena[0]=="" or cadena[0].isdigit()==False:
                 return "Formato inválido, se esperaba digitos antes del punto"
             else:
-                if cadena[1].isdigit() or cadena[1].isspace() or cadena[1]=="":
-                    if cadena[1].isspace() or cadena[1]=="":
-                        txt+="00"
-                        return txt
-                    else:
-                        if " " in cadena[1]:
-                            return "Formato inválido, no se aceptan espacios"
-                        elif len(cadena[1])>2:
-                            aux=float(txt)
-                            redondeado = round(aux, 2)
+                if cadena[1].isdigit():
+                    if len(cadena[1])>2:
+                        aux=float(txt)
+                        redondeado = round(aux, 2)
+                        if aux<=100:
                             return  str(redondeado)
-                        elif len(cadena[1])==2:
+                        else:
+                            return "Formato inválido, la propina debe ser menor al 100%"
+                    elif len(cadena[1])==2:
+                        aux=float(txt)
+                        if aux<=100:
                             return txt
-                        elif len(cadena[1])==1:
-                            txt+="0"
+                        else:
+                            return "Formato inválido, la propina debe ser menor al 100%"
+                    elif len(cadena[1])==1:
+                        aux=float(txt)
+                        if aux<=100:
                             return txt
+                        else:
+                            return "Formato inválido, la propina debe ser menor al 100%"
                 else:
-                    return "Formato inválido, se esperaba o no digitos después del punto"
+                    return "Formato inválido, se esperaba digitos despues del punto"
 
         elif cont>1:
             return  "Formato inválido, contiene mas dos puntos"
 
         elif cont==0:
             if txt.isdigit():
-                txt+=".00"
-                return txt
+                aux=float(txt)
+                if aux<=100:
+                    return txt
+                else:
+                    return "Formato inválido, la propina debe ser menor al 100%"
             else:
                 return "Formato inválido, no son digitos"
+
     def getListaTokens(self):
         return self.ListaTokens
     
