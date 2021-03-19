@@ -3,11 +3,13 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from Procesar import Analizar
 from Funciones.ReporteMenuEr import generarR
+from Funciones.ReporteOErr import generarRO
 from Funciones.Menu import generarM
 from Funciones.ReporteTokens import generarT
 from Funciones.MenuFiltro import generarFl
 from Funciones.generarArbol import generarA
 from ProcesarOrden import AnalizarOrden
+from Funciones.ReporteTokensO import generarTO
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
@@ -85,7 +87,7 @@ def generarMenu():
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def generarFactura():
-    print("\n-----------------------------------GENERAR ORDEN----------------------------------\n")
+    print("\n-----------------------------------GENERAR FACTURA----------------------------------\n")
     if rutaOrden!="" and rutaMenu!="":
         try:
             a=Analizar(rutaMenu)
@@ -93,10 +95,17 @@ def generarFactura():
             errores=a.getListaErrores()
             if len(errores)==0:
                 b=AnalizarOrden(rutaOrden,a.getListaOpciones())
-                b.imprimirTokens()
-                b.imprimirErrores()
+                t=b.getListaTokens()
+                e=b.getListaErrores()
+                if len(e)==0:
+                    generarTO(t)
+                    print("     > Orden generada")
+                else:
+                    generarRO(e,t)
+                    print("  > ERROR: El archivo contiene errores")
                 input("\n - PRESIONE ENTER PARA CONTINUAR...")
             else:
+                generarR(errores,tokens)
                 print("  > ERROR: El archivo menu contiene errores, no se puede generar")
                 input(" - PRESIONE ENTER PARA CONTINUAR...")
         except:

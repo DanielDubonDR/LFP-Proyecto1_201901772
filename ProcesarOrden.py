@@ -28,6 +28,7 @@ class AnalizarOrden:
         posicion=0
         columna=1
         string=""
+        cant=0
         noIdentificados="~!@#$%^&*()_+-|;\/¿¡?{[}]´."
         noIdentificados2="~!@#$%^&*()+-|;\/¿¡?{[}]´."
         longitud=len(self.texto)
@@ -167,6 +168,12 @@ class AnalizarOrden:
                 if caracter==",":
                     aux=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
                     self.ListaTokens.append(aux)
+                    asd=string.rstrip().lstrip()
+                    try:
+                        cant=int(asd)
+                    except:
+                        aux=error(string.rstrip().lstrip(), self.Linea, columna, "No es un numero entero")
+                        self.ListaErrores.append(aux)
                     posicion+=1
                     columna+=1
                     estado=6
@@ -192,9 +199,15 @@ class AnalizarOrden:
                 if caracter=="\n":
                     verificar = re.search("[a-z][a-z0-9_]*",string)
                     if string.lstrip().rstrip()==verificar.group():
-                        aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
-                        self.ListaTokens.append(aux)
-                        identificador=string.lstrip().rstrip()
+                        z=self.buscar(string.lstrip().rstrip())
+                        if z==False:
+                            aux=error(string.lstrip().rstrip(), self.Linea, columna, "El identificador no esta registrado")
+                            self.ListaErrores.append(aux)
+                        else:
+                            aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                            self.ListaTokens.append(aux)
+                            f=dtOrden(z.nombre,z.precio, cant)
+                            self.ListaOrden.append(f)
                         estado=0
                         string=""
                     else:
@@ -213,12 +226,17 @@ class AnalizarOrden:
                     posicion+=1
                     columna+=1
                     
-    def buscar(self, identificador):
+    def buscar(self, identifica):
+        encontrado=False
+        aux=None
         for i in self.opciones:
-            if i.identificador==identificador:
-                return i
-            else:
-                return False
+            if i.identificador==identifica:
+                encontrado=True
+                aux=i
+        if encontrado:
+            return aux
+        else:
+            return encontrado
 
     def imprimirTokens(self):
         cont=1
@@ -230,6 +248,9 @@ class AnalizarOrden:
         for errores in self.ListaErrores:
             print(errores)
 
+    def imprimirOrden(self):
+        for errores in self.ListaOrden:
+            print(errores)
 
     def verificarPorcentaje(self,txt):
         cont=0
@@ -287,8 +308,8 @@ class AnalizarOrden:
         return self.ListaErrores
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
-
+'''
 a=AnalizarOrden("Archivos_Prueba\Orden.txt","as")
 a.imprimirTokens()
 a.imprimirErrores()
-
+'''
