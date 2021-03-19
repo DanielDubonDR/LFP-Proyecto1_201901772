@@ -1,15 +1,19 @@
 from Clases.Datos import datos, error
-from Clases.Dt import Seccion, Opciones
+from Clases.DatosOrden import dtCabecera, dtOrden
 import re
 
 class AnalizarOrden:
-    def __init__(self, ruta):
+    def __init__(self, ruta,opciones):
        self.ruta=ruta
        self.Linea=1
        self.texto=""
        self.ListaTokens=[]
        self.ListaErrores=[]
+       self.opciones=opciones
+       self.header=None
+       self.ListaOrden=[]
        self.leerArchivo()
+
 
     def leerArchivo(self):
         archivo=open(self.ruta,'r', encoding='utf8')
@@ -161,7 +165,7 @@ class AnalizarOrden:
             
             elif estado==5:
                 if caracter==",":
-                    aux=datos(string, self.Linea, columna, "Número")
+                    aux=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
                     self.ListaTokens.append(aux)
                     posicion+=1
                     columna+=1
@@ -170,7 +174,7 @@ class AnalizarOrden:
                 elif caracter.isalpha():
                     aux=error(",", self.Linea, columna, "Se esperaba")
                     self.ListaErrores.append(aux)
-                    aux2=datos(string, self.Linea, columna, "Número")
+                    aux2=datos(string.rstrip().lstrip(), self.Linea, columna, "Número")
                     self.ListaTokens.append(aux2)
                     estado=6
                     string=""
@@ -209,6 +213,12 @@ class AnalizarOrden:
                     posicion+=1
                     columna+=1
                     
+    def buscar(self, identificador):
+        for i in self.opciones:
+            if i.identificador==identificador:
+                return i
+            else:
+                return False
 
     def imprimirTokens(self):
         cont=1
@@ -278,6 +288,7 @@ class AnalizarOrden:
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
 
-a=AnalizarOrden("Archivos_Prueba\Orden.txt")
+a=AnalizarOrden("Archivos_Prueba\Orden.txt","as")
 a.imprimirTokens()
 a.imprimirErrores()
+

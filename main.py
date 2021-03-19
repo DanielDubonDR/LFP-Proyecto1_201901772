@@ -7,6 +7,7 @@ from Funciones.Menu import generarM
 from Funciones.ReporteTokens import generarT
 from Funciones.MenuFiltro import generarFl
 from Funciones.generarArbol import generarA
+from ProcesarOrden import AnalizarOrden
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
@@ -85,10 +86,24 @@ def generarMenu():
 
 def generarFactura():
     print("\n-----------------------------------GENERAR ORDEN----------------------------------\n")
-    if rutaOrden!="":
-        print("hola")
+    if rutaOrden!="" and rutaMenu!="":
+        try:
+            a=Analizar(rutaMenu)
+            tokens=a.getListaTokens()
+            errores=a.getListaErrores()
+            if len(errores)==0:
+                b=AnalizarOrden(rutaOrden,a.getListaOpciones())
+                b.imprimirTokens()
+                b.imprimirErrores()
+                input("\n - PRESIONE ENTER PARA CONTINUAR...")
+            else:
+                print("  > ERROR: El archivo menu contiene errores, no se puede generar")
+                input(" - PRESIONE ENTER PARA CONTINUAR...")
+        except:
+            print("  > ERROR: Ocurrio un error de análisis")
+            input(" - PRESIONE ENTER PARA CONTINUAR...")
     else:
-        print("  > ERROR: No se ha cargado ningún archivo")
+        print("  > ERROR: No se ha cargado ningún archivo, verifique si se cargaron ambos archivos")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
 
 def generarArbol():
