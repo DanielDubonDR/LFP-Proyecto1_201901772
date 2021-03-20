@@ -31,6 +31,10 @@ class AnalizarOrden:
         cant=0
         noIdentificados="~!@#$%^&*()_+-|;\/¿¡?{[}]´."
         noIdentificados2="~!@#$%^&*()+-|;\/¿¡?{[}]´."
+        cliente=""
+        nit=""
+        direccion=""
+        cont=0
         longitud=len(self.texto)
         while posicion<longitud:
 
@@ -63,6 +67,13 @@ class AnalizarOrden:
                 if caracter=="'":
                     aux=datos(string, self.Linea, columna, "Cadena")
                     self.ListaTokens.append(aux)
+                    if cont==0:
+                        cliente=string
+                    elif cont==1:
+                        nit=string
+                    elif cont==2:
+                        direccion=string
+                    cont+=1
                     posicion+=1
                     columna+=1
                     estado=2
@@ -141,6 +152,8 @@ class AnalizarOrden:
                     else:
                         aux=datos(string.rstrip().lstrip()+str("%"), self.Linea, columna, "Porcentaje")
                         self.ListaTokens.append(aux)
+                        v=dtCabecera(cliente,nit,direccion,numero)
+                        self.header=v
                     posicion+=1
                     columna+=1
                     estado=0
@@ -306,6 +319,12 @@ class AnalizarOrden:
     
     def getListaErrores(self):
         return self.ListaErrores
+
+    def getCabeceras(self):
+        return self.header
+
+    def getOrden(self):
+        return self.ListaOrden
 
         #print(self.contLinea, self.reservada, self.cadena, self.opciones, self.error)
 '''

@@ -10,6 +10,7 @@ from Funciones.MenuFiltro import generarFl
 from Funciones.generarArbol import generarA
 from ProcesarOrden import AnalizarOrden
 from Funciones.ReporteTokensO import generarTO
+from Funciones.generarFactura import generarFac
 Tk().withdraw()
 #----------------------------------------------------CLASES--------------------------------------------------
 
@@ -99,7 +100,8 @@ def generarFactura():
                 e=b.getListaErrores()
                 if len(e)==0:
                     generarTO(t)
-                    print("     > Orden generada")
+                    generarFac(a.getNombre(),b.getCabeceras(),b.getOrden())
+                    print("     > Factura generada")
                 else:
                     generarRO(e,t)
                     print("  > ERROR: El archivo contiene errores")
