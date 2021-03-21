@@ -108,7 +108,7 @@ def generarCuerpo(secciones, opciones,lim):
 
 def crearArchivo():
     global texto
-    arhcivo=open('Menu.html','w')
+    arhcivo=open('Menu.html','w', encoding='utf8')
     arhcivo.write(texto)
     arhcivo.close()
     os.startfile("Menu.html")

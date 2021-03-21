@@ -99,7 +99,7 @@ def imprimirTK(tokens):
     '''
 def crearArchivo():
     global texto
-    arhcivo=open('Reporte_Errores_Menu.html','w')
+    arhcivo=open('Reporte_Errores_Menu.html','w', encoding='utf8')
     arhcivo.write(texto)
     arhcivo.close()
     os.startfile("Reporte_Errores_Menu.html")

@@ -116,7 +116,7 @@ def generarCuerpo(datos, elementos):
 
 def crearArchivo():
     global texto
-    arhcivo=open('Factura.html','w')
+    arhcivo=open('Factura.html','w', encoding='utf8')
     arhcivo.write(texto)
     arhcivo.close()
     os.startfile("Factura.html")

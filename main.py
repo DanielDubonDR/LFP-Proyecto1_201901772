@@ -24,7 +24,7 @@ def cargarMenu():
     global rutaMenu
     print("\n----------------------------------CARGAR ARCHIVO----------------------------------\n")
     try:
-        rutaMenu = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.txt*"), ("all files", "*.*")))
+        rutaMenu = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.flp*"), ("all files", "*.*")))
         if rutaMenu=="":
             print(" > ERROR: No se seleccionó ningún archivo")
             input("\n- PRESIONE ENTER PARA CONTINUAR...")
@@ -64,7 +64,7 @@ def generarMenu():
                 print("     2. No\n")
                 opcion=int(input("  - Ingrese una opción:\n     > "))
                 if opcion==1:
-                    lim=float(input("  - Ingrese el límite del precio:\n     > "))
+                    lim=float(input("\n  - Ingrese el límite del precio:\n     > "))
                     generarFl(a.getNombre(),a.getListaSecciones(),a.getListaOpciones(),lim)
                     generarT(tokens)
                     print("     > Menú generado")

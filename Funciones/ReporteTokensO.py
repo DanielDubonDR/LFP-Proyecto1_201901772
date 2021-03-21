@@ -69,7 +69,7 @@ def imprimirTK(tokens):
     '''
 def crearArchivo():
     global texto
-    arhcivo=open('Reporte_Tokens_Orden.html','w')
+    arhcivo=open('Reporte_Tokens_Orden.html','w', encoding='utf8')
     arhcivo.write(texto)
     arhcivo.close()
     os.startfile("Reporte_Tokens_Orden.html")
