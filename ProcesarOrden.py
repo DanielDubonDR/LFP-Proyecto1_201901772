@@ -7,6 +7,7 @@ class AnalizarOrden:
        self.ruta=ruta
        self.Linea=1
        self.texto=""
+       self.g=0
        self.ListaTokens=[]
        self.ListaErrores=[]
        self.opciones=opciones
@@ -19,6 +20,8 @@ class AnalizarOrden:
         archivo=open(self.ruta,'r', encoding='utf8')
         for linea in archivo:
            self.texto+=linea
+           if linea!="\n":
+               self.g+=1
         archivo.close() 
         self.texto+="\n"
         self.analizar()
@@ -210,6 +213,26 @@ class AnalizarOrden:
 
             elif estado==6:
                 if caracter=="\n":
+                    verificar = re.search("[a-z][a-z0-9_]*",string)
+                    if string.lstrip().rstrip()==verificar.group():
+                        z=self.buscar(string.lstrip().rstrip())
+                        if z==False:
+                            aux=error(string.lstrip().rstrip(), self.Linea, columna, "El identificador no esta registrado")
+                            self.ListaErrores.append(aux)
+                        else:
+                            aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                            self.ListaTokens.append(aux)
+                            f=dtOrden(z.nombre,z.precio, cant)
+                            self.ListaOrden.append(f)
+                        estado=0
+                        string=""
+                    else:
+                        #print("identificador no valido", string.lstrip())
+                        aux=error(string, self.Linea, columna, "Identificador inválido")
+                        self.ListaErrores.append(aux)
+                        estado=0
+                        string=""
+                if caracter==" " and self.g==1:
                     verificar = re.search("[a-z][a-z0-9_]*",string)
                     if string.lstrip().rstrip()==verificar.group():
                         z=self.buscar(string.lstrip().rstrip())
