@@ -229,13 +229,21 @@ class Analizar:
                 if caracter==";":
                     verificar = re.search("[a-z][a-z0-9_]*",string)
                     if string.lstrip().rstrip()==verificar.group():
-                        aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
-                        self.ListaTokens.append(aux)
-                        identificador=string.lstrip().rstrip()
-                        estado=9
-                        string=""
-                        posicion+=1
-                        columna+=1
+                        if self.buscarIdentificador(string.lstrip().rstrip()):
+                            aux=error(string, self.Linea, columna, "Identificador inválido, ya existe")
+                            self.ListaErrores.append(aux)
+                            estado=9
+                            string=""
+                            posicion+=1
+                            columna+=1
+                        else:
+                            aux=datos(string.lstrip().rstrip(), self.Linea, columna, "Identificador")
+                            self.ListaTokens.append(aux)
+                            identificador=string.lstrip().rstrip()
+                            estado=9
+                            string=""
+                            posicion+=1
+                            columna+=1
                     else:
                         #print("identificador no valido", string.lstrip())
                         aux=error(string, self.Linea, columna, "Identificador inválido")
@@ -450,6 +458,14 @@ class Analizar:
         if encontrado==False:
             aux=error("restaurante", "0", "0", "No existe la palabra reservada")
             self.ListaErrores.append(aux)
+    
+    def buscarIdentificador(self,id):
+        encontrado=False
+        for buscar in self.ListaTokens:
+            if buscar.lexema==id:
+                encontrado=True
+            
+        return encontrado
 
     def imprimirTokens(self):
         cont=1
