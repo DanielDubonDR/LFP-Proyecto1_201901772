@@ -22,6 +22,7 @@ class Analizar:
         archivo.close() 
         self.texto+="\n"
         self.analizar()
+        self.buscarReservada()
     
     def analizar(self):
         estado=0
@@ -439,6 +440,16 @@ class Analizar:
 
             elif estado==16:
                 estado=0
+
+    def buscarReservada(self):
+        for buscar in self.ListaTokens:
+            encontrado=False
+            if buscar.lexema=="restaurante":
+                encontrado=True
+            
+        if encontrado==False:
+            aux=error("restaurante", "0", "0", "No existe la palabra reservada")
+            self.ListaErrores.append(aux)
 
     def imprimirTokens(self):
         cont=1
