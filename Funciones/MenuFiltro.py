@@ -71,13 +71,23 @@ def generarCuerpo(secciones, opciones,lim):
                                     <th style="width:33%;" class="w3-center w3-xlarge w3-Courgette">Precio</th>
                                 </tr>
         '''
+        cont=0
         for op in opciones:
             if sec.id==op.idseccion and float(op.precio)<=lim:
+                cont+=1
                 texto+='''
                 <tr>
                           <td class="w3-center w3-Asap-Condensed w3-large">'''+str(op.nombre)+'''</td>
                           <td class="w3-center w3-Asap-Condensed w3-large">'''+str(quitarDescripcion(op.descripcion))+'''</td>
                           <td class="w3-center w3-Asap-Condensed w3-large">Q'''+str(op.precio)+'''</td>
+                        </tr>
+                '''
+        if cont==0:
+            texto+='''
+                <tr>
+                          <td class="w3-center w3-Asap-Condensed w3-large"></td>
+                          <td class="w3-center w3-Asap-Condensed w3-large">Sin resultados</td>
+                          <td class="w3-center w3-Asap-Condensed w3-large"></td>
                         </tr>
                 '''
         texto+='''

@@ -442,8 +442,8 @@ class Analizar:
                 estado=0
 
     def buscarReservada(self):
+        encontrado=False
         for buscar in self.ListaTokens:
-            encontrado=False
             if buscar.lexema=="restaurante":
                 encontrado=True
             
