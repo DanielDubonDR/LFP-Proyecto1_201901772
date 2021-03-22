@@ -153,9 +153,13 @@ class Analizar:
                 if caracter=="'":
                     posicion+=1
                     estado=0
-                    aux=datos(string, self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux)
-                    self.nombreRestaurtante=string
+                    if string!="":
+                        aux=datos(string, self.Linea, columna, "Cadena")
+                        self.ListaTokens.append(aux)
+                        self.nombreRestaurtante=string
+                    else:
+                        aux2=error(string,self.Linea,columna,"Falta nombre del restaurante")
+                        self.ListaErrores.append(aux2)
                     string=""
                     columna+=1
                 elif caracter=="\n":
@@ -297,8 +301,12 @@ class Analizar:
             
             elif estado==10:
                 if caracter=="'":
-                    aux=datos(string, self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux)
+                    if string!="":
+                        aux=datos(string, self.Linea, columna, "Cadena")
+                        self.ListaTokens.append(aux)
+                    else:
+                        aux2=error(string,self.Linea,columna,"Falta nombre")
+                        self.ListaErrores.append(aux2)
                     nombre=string
                     posicion+=1
                     columna+=1
@@ -393,9 +401,13 @@ class Analizar:
             
             elif estado==14:
                 if caracter=="'":
-                    aux=datos(string, self.Linea, columna, "Cadena")
-                    self.ListaTokens.append(aux)
-                    descripcion=string
+                    if string=="":
+                        aux2=error(string,self.Linea,columna,"Falta descripcion")
+                        self.ListaErrores.append(aux2)
+                    else:
+                        aux=datos(string, self.Linea, columna, "Cadena")
+                        self.ListaTokens.append(aux)
+                        descripcion=string
                     posicion+=1
                     columna+=1
                     estado=15
@@ -525,7 +537,7 @@ class Analizar:
                 txt+=".00"
                 return txt
             else:
-                return "Formato inválido, no son digitos"
+                return "Formato inválido, no son digitos, falta precio"
     def getListaTokens(self):
         return self.ListaTokens
     
