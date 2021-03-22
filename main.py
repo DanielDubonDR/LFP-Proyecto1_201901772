@@ -24,7 +24,7 @@ def cargarMenu():
     global rutaMenu
     print("\n----------------------------------CARGAR ARCHIVO----------------------------------\n")
     try:
-        rutaMenu = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.flp*"), ("all files", "*.*")))
+        rutaMenu = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.lfp*"), ("all files", "*.*")))
         if rutaMenu=="":
             print(" > ERROR: No se seleccionó ningún archivo")
             input("\n- PRESIONE ENTER PARA CONTINUAR...")
@@ -39,7 +39,7 @@ def cargarOrden():
     print("\n----------------------------------CARGAR ARCHIVO----------------------------------\n")
     global rutaOrden
     try:
-        rutaOrden = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.txt*"), ("all files", "*.*")))
+        rutaOrden = askopenfilename(initialdir = "/", title = "Select a File", filetypes = (("Text files", "*.lfp*"), ("all files", "*.*")))
         if rutaOrden=="":
             print(" > ERROR: No se seleccionó ningún archivo")
             input("\n- PRESIONE ENTER PARA CONTINUAR...")
@@ -79,10 +79,10 @@ def generarMenu():
             else:
                 print("  > ERROR: El archivo contiene errores")
                 generarR(errores,tokens)
-                input(" - PRESIONE ENTER PARA CONTINUAR...")
+                input("\n - PRESIONE ENTER PARA CONTINUAR...")
         except:
             print("  > ERROR: Ocurrio un error de análisis")
-            input(" - PRESIONE ENTER PARA CONTINUAR...")
+            input("\n - PRESIONE ENTER PARA CONTINUAR...")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
@@ -104,15 +104,15 @@ def generarFactura():
                     print("     > Factura generada")
                 else:
                     generarRO(e,t)
-                    print("  > ERROR: El archivo contiene errores")
+                    print("\n  > ERROR: El archivo contiene errores")
                 input("\n - PRESIONE ENTER PARA CONTINUAR...")
             else:
                 generarR(errores,tokens)
                 print("  > ERROR: El archivo menu contiene errores, no se puede generar")
-                input(" - PRESIONE ENTER PARA CONTINUAR...")
+                input("\n - PRESIONE ENTER PARA CONTINUAR...")
         except:
             print("  > ERROR: Ocurrio un error de análisis")
-            input(" - PRESIONE ENTER PARA CONTINUAR...")
+            input("\n - PRESIONE ENTER PARA CONTINUAR...")
     else:
         print("  > ERROR: No se ha cargado ningún archivo, verifique si se cargaron ambos archivos")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
@@ -130,10 +130,10 @@ def generarArbol():
                 input("\n - PRESIONE ENTER PARA CONTINUAR...")
             else:
                 print("  > ERROR: El archivo contiene errores, no se puede generar")
-                input(" - PRESIONE ENTER PARA CONTINUAR...")
+                input("\n - PRESIONE ENTER PARA CONTINUAR...")
         except:
             print("  > ERROR: Ocurrio un error de análisis")
-            input(" - PRESIONE ENTER PARA CONTINUAR...")
+            input("\n - PRESIONE ENTER PARA CONTINUAR...")
     else:
         print("  > ERROR: No se ha cargado ningún archivo")
         input("\n- PRESIONE ENTER PARA CONTINUAR...")
