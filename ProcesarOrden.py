@@ -63,6 +63,12 @@ class AnalizarOrden:
                     posicion+=1
                     columna+=1
 
+                elif caracter in noIdentificados2:
+                    aux=error(caracter, self.Linea, columna, "Carácter inválido")
+                    self.ListaErrores.append(aux)
+                    posicion+=1
+                    columna+=1
+
                 else:
                     posicion+=1
             

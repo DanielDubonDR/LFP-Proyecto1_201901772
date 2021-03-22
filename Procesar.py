@@ -30,6 +30,7 @@ class Analizar:
         columna=1
         string=""
         noIdentificados="~!@#$%^&*()\,_+-|/¿¡?{[}]´."
+        noIdentificado2="~!@#$%^&*()\,+-|/¿¡?{[}]´."
         longitud=len(self.texto)
         idseccion=None
         identificador=None
@@ -66,7 +67,17 @@ class Analizar:
                     posicion+=1
                     columna+=1
 
+                elif caracter in noIdentificado2:
+                    posicion+=1
+                    columna+=1
+                    aux2=error(caracter,self.Linea,columna,"Carácter inválido")
+                    self.ListaErrores.append(aux2)
+
                 else:
+                    if caracter==";":
+                        estado=9
+                        aux2=error("[",self.Linea,columna,"Se esperaba")
+                        self.ListaErrores.append(aux2)
                     posicion+=1
             
             elif estado==1:
@@ -402,7 +413,7 @@ class Analizar:
             elif estado==14:
                 if caracter=="'":
                     if string=="":
-                        aux2=error(string,self.Linea,columna,"Falta descripcion")
+                        aux2=error(string,self.Linea,columna,"Falta descripción")
                         self.ListaErrores.append(aux2)
                     else:
                         aux=datos(string, self.Linea, columna, "Cadena")

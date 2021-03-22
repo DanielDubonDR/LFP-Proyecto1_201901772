@@ -5,7 +5,7 @@ digraph {
 	0 -> 1
 	2 [label=Desayunos]
 	0 -> 2
-	3 [label="  Postres"]
+	3 [label=Postres]
 	0 -> 3
 	bebida_2 [label="Bebida #2   Q10.50
 Descripción Bebida 2"]
