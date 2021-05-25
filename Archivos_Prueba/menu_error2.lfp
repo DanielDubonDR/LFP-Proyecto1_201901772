@@ -1,0 +1,17 @@
+restaurante='TAQUISA LFP'
+'Malteadas':
+[malteada_1;'Chocolatada';27.;'Descripción malteada 1']
+[malteada_2;'Fresas y Leche';18.50;'Descripción malteada 2']
+[malteada_3;'Especial de azucar';16.;'Descripción malteada 3']
+[malteada_4;'Amanecer con diabetes';15;'Descripción de la malteada 4']
+
+'Desayunos':
+['d1';'Desayuno 1';45.00;'Descripción Desayuno 1']
+[d2;'Desayuno 2';40.;'Descripción Desayuno 2']
+[d3;'Desayuno 3';35;'Descripción Desayuno3']
+
+'Postres':
+['pos_001';'Postre 1';25;'Descripción Postre 1']
+[pos_002;'Postre 2';26;'Descripción Postre 2']
+[pos_003;'Postre 3';27;'Descripción Postre 3']
+[pos_004;'Postre 4';28;'Descripción Postre 4']
