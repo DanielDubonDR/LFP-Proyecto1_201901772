@@ -12,5 +12,6 @@ https://www.graphviz.org/download/
 
 - Tambien es necesario tener instalado el paquete de python graphviz, puede hacerlo ejecutando el siguiente comando en su consola: `pip install graphviz` 
 - O bien abra su consola en la raiz del proyecto y ejcute lo siguiente `pip install -r requirements.txt`
+- Para mayor información revise la documentación
 
 **_201901772-Daniel Reginaldo Dubón Rodríguez_**
