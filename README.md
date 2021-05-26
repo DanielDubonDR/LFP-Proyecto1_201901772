@@ -1,9 +1,9 @@
 # LFP-Proyecto1
- Proyecto 1 de lenguajes de programacion, implementación de automatas
+ Proyecto 1 del curso de Lenguajes Formales y de Programación, el proyecto consiste en la implementación de autómatas finitos deterministas que obtienen permiten extraer datos de un archivo con una estructura determinada
  
 **Versión de python**
  
-Se desarrolo en la version de python 3.8
+Se desarrolló en la versión de python 3.8
 
 **Requirimientos**
 
